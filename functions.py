@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def approximateJacobian(f, x, dx=1e-6):
     """Calculate a numerical approximation of the Jacobian Df(x).

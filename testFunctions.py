@@ -3,10 +3,14 @@
 import unittest
 import numpy as np
 import numpy.testing as npt
+import math
 
 import functions as F
 
 class TestFunctions(unittest.TestCase):
+   
+ #scalar tests
+    
     def test_ApproxJacobian1(self):
         slope = 3.0
         # Yes, you can define a function inside a function/method. And
@@ -24,6 +28,46 @@ class TestFunctions(unittest.TestCase):
         # If x and f are scalar-valued, Df_x should be, too
         self.assertTrue(np.isscalar(Df_x))
         self.assertAlmostEqual(Df_x, slope)
+
+    def test_ApproxJacobian1a(self):
+        #test for large numbers
+        slope = 300000000.0
+        def f(x):
+            return slope * x + 5000000.0
+
+        x0 = 2.0
+        dx = 1.e-3
+        Df_x = F.approximateJacobian(f, x0, dx)
+
+        self.assertTrue(np.isscalar(Df_x))
+        self.assertAlmostEqual(Df_x, slope)
+        
+        
+    def test_ApproxJacobian1b(self):
+        #test for second degree polynomials
+        slope = 3.0
+        quadratic = F.Polynomial([slope,slope,slope])
+        def f(x):
+            return quadratic(x)
+        x0 = 2.0
+        dx = 1.e-7
+        Df_x = F.approximateJacobian(f, x0, dx)
+
+        self.assertTrue(np.isscalar(Df_x))
+        assert math.isclose(Df_x, 15, rel_tol=0.01)
+
+    def test_ApproxJacobian1c(self):
+        #test for second degree polynomials, different x0
+        slope = 3.0
+        quadratic = F.Polynomial([slope,slope,slope])
+        def f(x):
+            return quadratic(x)
+        x0 = 0
+        dx = 1.e-007
+        Df_x = F.approximateJacobian(f, x0, dx)
+
+        self.assertTrue(np.isscalar(Df_x))
+        assert math.isclose(Df_x, 3,rel_tol = 0.01)
 
     def test_ApproxJacobian2(self):
         # numpy matrices can also be initialized with strings. The

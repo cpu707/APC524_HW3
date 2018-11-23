@@ -132,6 +132,8 @@ class TestFunctions(unittest.TestCase):
         # array-specific assert statements found in numpy.testing
         npt.assert_array_almost_equal(Df_x, A)
 
+
+
     def test_Polynomial(self):
         # p(x) = x^2 + 5x + 4
         p = F.Polynomial([4, 5, 1])

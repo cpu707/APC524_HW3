@@ -29,15 +29,16 @@ def approximateJacobian(f, x, dx=1e-6):
     # tons of explanatory comments for those who aren't well-versed in
     # numpy. You may want to delete all these comments from the file
     # once you get comfortable with what they say.
-
+    try:
     # Evaluate f(x) up front, since we'll need this value in multiple
     # places
-    fx = f(x)
+        fx = f(x)
 
+    
     # First, handle the case in which x is a scalar (i.e. not
     # array-like, just a plain number)
-    if np.isscalar(x):
-        return (f(x + dx) - fx) / dx
+        if np.isscalar(x):
+            return (f(x + dx) - fx) / dx
 
     # From this point on, x must be a numpy array or numpy matrix, so
     # Df_x will be returned as a numpy matrix. Let's initialize it as
@@ -55,8 +56,8 @@ def approximateJacobian(f, x, dx=1e-6):
 
     # Let's leverage these facts to initialize Df_x to be an NxN numpy
     # matrix of zeros:
-    N = x.size
-    Df_x = np.matrix(np.zeros((N,N)))
+        N = x.size
+        Df_x = np.matrix(np.zeros((N,N)))
     # Just as an FYI, but not relevant in the current module, two
     # other fun facts: (iii) a standalone empty pair of parentheses ()
     # represents an empty tuple, and a standalone pair of square
@@ -70,7 +71,7 @@ def approximateJacobian(f, x, dx=1e-6):
     # This is good, b/c we'll be able to add x + h without issue, and
     # it will be of the same shape/type as x (so that we can feed x +
     # h into f without issue).
-    h = np.zeros_like(x)
+        h = np.zeros_like(x)
     # We allocate this "vector of zeros" just once (to be
     # memory-efficient). Below, we're going to iterate over the
     # columns of Df_x and populate them with something nonzero.  As we
@@ -84,18 +85,20 @@ def approximateJacobian(f, x, dx=1e-6):
     # x_N). That's the same as evaluating f at (x + h), where h = (0,
     # 0,... dx [in ith slot], 0, ..., 0).  Addition on numpy
     # arrays/matrices happens elementwise.
-    for i in range(x.size): # Could also have said range(x.size)
-        h[i] = dx
-        # Replace ith col of Df_x with difference quotient
-        Df_x[:,i] = (f(x + h) - fx) / dx
-        # Reset h[i] to 0
-        h[i] = 0
+        for i in range(x.size): # Could also have said range(x.size)
+            h[i] = dx
+            # Replace ith col of Df_x with difference quotient
+            Df_x[:,i] = (f(x + h) - fx) / dx
+            # Reset h[i] to 0
+            h[i] = 0
     # NOTE that there are more numpy-ish ways to iterate over the
     # columns of a 2D array, but I thought this C-esque way would be
     # most legible for n00bz
 
-    return Df_x
-
+        return Df_x
+    except (ZeroDivisionError, TypeError):
+        print("Something you entered is not a valid input. Please try again.")
+        
 class Polynomial(object):
     """Callable polynomial object.
 

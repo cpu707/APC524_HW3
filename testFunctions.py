@@ -69,6 +69,32 @@ class TestFunctions(unittest.TestCase):
         self.assertTrue(np.isscalar(Df_x))
         assert math.isclose(Df_x, 3,rel_tol = 0.01)
 
+    def test_ApproxJacobian1d(self):
+        #test for trig function
+        slope = 3.0
+        def f(x):
+            return math.sin(x)
+        x0 = math.pi
+        dx = 1.e-003
+        Df_x = F.approximateJacobian(f, x0, dx)
+
+        self.assertTrue(np.isscalar(Df_x))
+        assert math.isclose(Df_x, -1,rel_tol = 0.01)
+
+    def test_ApproxJacobian1e(self):
+        #test for exponential function
+        slope = 3.0
+        def f(x):
+            return math.e**x
+        x0 = 1
+        dx = 1.e-003
+        Df_x = F.approximateJacobian(f, x0, dx)
+
+        self.assertTrue(np.isscalar(Df_x))
+        assert math.isclose(Df_x, math.e,rel_tol = 0.01)
+
+#nonscalar tests
+
     def test_ApproxJacobian2(self):
         # numpy matrices can also be initialized with strings. The
         # semicolon separates rows; spaces (or commas) delimit entries

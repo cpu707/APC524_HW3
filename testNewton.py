@@ -42,7 +42,7 @@ class TestNewton(unittest.TestCase):
 
         f = lambda x : -3.0*x**2 + 6.0
 
-        solver = newton.Newton(f, tol=2.e-15, maxiter=20)
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20, maxradius = 5)
         x = solver.solve(50)
 
         self.assertRaises(radiusException)
@@ -55,7 +55,7 @@ class TestNewton(unittest.TestCase):
         solver = newton.Newton(f, tol=2.e-15, maxiter=20)
         x = solver.solve(0)
 
-        self.assertEqual(x, math.sqrt(2))
+        self.assertRaises(customException)
 
 
     def testQuadraticNoAnswer(self):
@@ -63,9 +63,9 @@ class TestNewton(unittest.TestCase):
         f = lambda x : 3.0*x**2 + 6.0
 
         solver = newton.Newton(f, tol=2.e-15, maxiter=20)
-        x = solver.solve(1)
+        (x,s) = solver.solve(1)
 
-        self.assertEqual(x, None)
+        self.assertEqual(s, "This answer is not accurate, there were not enough interations")
 
 if __name__ == "__main__":
     unittest.main()

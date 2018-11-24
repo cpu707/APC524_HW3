@@ -13,7 +13,7 @@ class Newton(object):
 
     """
     
-    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6, maxradius=2):
+    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6, maxradius=200):
         """Parameters:
         
         f: the function whose roots we seek. Can be scalar- or
@@ -52,10 +52,15 @@ class Newton(object):
                 return x
 
             x = self.step(x, fx)
+#            print('This is x after the step \n {0}'.format(x))
+            if type(x) == customException:
+                return x
             if abs(x - x0) > self._maxradius:
-                raise radiusException('The guess is to far from the answer. Try a different guess.')
+                return radiusException('The guess is to far from the answer. Try a different guess.')
+ #       print('this is np.linalg.norm \n {0}'.format(np.linalg.norm(fx)))
         if np.linalg.norm(fx) > self._tol:
-            print("This answer is not accurate, there were not enough interations")
+            s = "This answer is not accurate, there were not enough interations"
+            return(x, s)
         return x
 
             
@@ -73,6 +78,13 @@ class Newton(object):
         # linalg.solve(A,B) returns the matrix solution to AX = B, so
         # it gives (A^{-1}) B. np.matrix() promotes scalars to 1x1
         # matrices.
+
+        if np.isscalar(x):
+            if Df_x ==0:
+                return customException("The starting guess is not good. Try again with a different guess")
+        else:
+            if np.linalg.cond(Df_x) > 1/sys.float_info.epsilon:
+                return customException("The starting guess is not good. Try again with a different guess")
         h = np.linalg.solve(np.matrix(Df_x), np.matrix(fx))
         # Suppose x was a scalar. At this point, h is a 1x1 matrix. If
         # we want to return a scalar value for our next guess, we need

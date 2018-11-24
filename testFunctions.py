@@ -56,6 +56,19 @@ class TestFunctions(unittest.TestCase):
         self.assertTrue(np.isscalar(Df_x))
         self.assertAlmostEqual(Df_x, 15)
 
+    def test_ApproxJacobian1bb(self):
+        #test for second degree polynomials
+        slope = 3.0
+        quadratic = F.Polynomial([6,0,slope])
+        def f(x):
+            return quadratic(x)
+        x0 = 0
+        dx = 1.e-7
+        Df_x = F.approximateJacobian(f, x0, dx)
+
+        self.assertTrue(np.isscalar(Df_x))
+        self.assertAlmostEqual(Df_x, 0)
+
     def test_ApproxJacobian1c(self):
         #test for second degree polynomials, different x0
         slope = 3.0
@@ -99,7 +112,7 @@ class TestFunctions(unittest.TestCase):
         # numpy matrices can also be initialized with strings. The
         # semicolon separates rows; spaces (or commas) delimit entries
         # within a row.
-        A = np.matrix("1.0 2.0; 3.0 4.0")
+        A = np.matrix([[1.0, 2.0], [3.0, 4.0]])
 
         def f(x):
             # The * operator for numpy matrices is overloaded to mean
@@ -117,7 +130,7 @@ class TestFunctions(unittest.TestCase):
         # to the matrix A. approximateJacobian should thus return
         # something pretty close to A.
 
-        x0 = np.matrix("5.0; 6.0")
+        x0 = np.matrix([[5.0], [6.0]])
         dx = 1.e-6
         Df_x = F.approximateJacobian(f, x0, dx)
 
@@ -137,24 +150,24 @@ class TestFunctions(unittest.TestCase):
         poly1 = F.Polynomial([2,2,2])
         poly2 = F.Polynomial([3,3,3])
         def f(x):
-            
             return np.matrix([[poly1(float(x[0]))],[poly2(float(x[1]))]])
-
-        x0 = np.matrix([2.0],[3.0]])
+  #      print('This is f(x)\n {0}'.format(f(x)))
+        x0 = np.matrix([[2.0],[3.0]])
         dx = 1.e-6
         Df_x = F.approximateJacobian(f, x0, dx)
 
+ #       print('This is Df_x\n {0}'.format(Df_x))
         self.assertEqual(len(Df_x), 2)
         npt.assert_array_almost_equal(Df_x, A)
 
     def test_ApproxJacobian2b(self):
-        A = np.matrix([[10,0],[0,21]])
+        A = np.matrix([[8,2],[36,3]])
 
         def f(x):
             
-            return np.matrix([[2*(float(x[0]))**2,2*(float(x[0]))],[3*(float(x[1]))**3, 3*(float(x[1]))]])
+            return np.matrix([[2*(float(x[0]))**2+2*(float(x[1]))],[3*(float(x[0]))**3+ 3*(float(x[1]))]])
 
-        x0 = np.matrix([2.0 , 3.0])
+        x0 = np.matrix([[2.0] , [3.0]])
         dx = 1.e-6
         Df_x = F.approximateJacobian(f, x0, dx)
 

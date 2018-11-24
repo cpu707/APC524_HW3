@@ -32,6 +32,7 @@ def approximateJacobian(f, x, dx=1e-6):
     try:
     # Evaluate f(x) up front, since we'll need this value in multiple
     # places
+   #     print('new test')
         fx = f(x)
 
     
@@ -58,6 +59,7 @@ def approximateJacobian(f, x, dx=1e-6):
     # matrix of zeros:
         N = x.size
         Df_x = np.matrix(np.zeros((N,N)))
+ #       print(Df_x)
     # Just as an FYI, but not relevant in the current module, two
     # other fun facts: (iii) a standalone empty pair of parentheses ()
     # represents an empty tuple, and a standalone pair of square
@@ -72,6 +74,7 @@ def approximateJacobian(f, x, dx=1e-6):
     # it will be of the same shape/type as x (so that we can feed x +
     # h into f without issue).
         h = np.zeros_like(x)
+#        print(h)
     # We allocate this "vector of zeros" just once (to be
     # memory-efficient). Below, we're going to iterate over the
     # columns of Df_x and populate them with something nonzero.  As we
@@ -89,6 +92,7 @@ def approximateJacobian(f, x, dx=1e-6):
             h[i] = dx
             # Replace ith col of Df_x with difference quotient
             Df_x[:,i] = (f(x + h*.5) - f(x-h*.5)) / dx
+  #          print(Df_x)
             # Reset h[i] to 0
             h[i] = 0
     # NOTE that there are more numpy-ish ways to iterate over the

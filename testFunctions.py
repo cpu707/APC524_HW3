@@ -54,7 +54,7 @@ class TestFunctions(unittest.TestCase):
         Df_x = F.approximateJacobian(f, x0, dx)
 
         self.assertTrue(np.isscalar(Df_x))
-        assert math.isclose(Df_x, 15, rel_tol=0.01)
+        self.assertAlmostEqual(Df_x, 15)
 
     def test_ApproxJacobian1c(self):
         #test for second degree polynomials, different x0
@@ -67,7 +67,7 @@ class TestFunctions(unittest.TestCase):
         Df_x = F.approximateJacobian(f, x0, dx)
 
         self.assertTrue(np.isscalar(Df_x))
-        assert math.isclose(Df_x, 3,rel_tol = 0.01)
+        self.assertAlmostEqual(Df_x, 3)
 
     def test_ApproxJacobian1d(self):
         #test for trig function
@@ -79,7 +79,7 @@ class TestFunctions(unittest.TestCase):
         Df_x = F.approximateJacobian(f, x0, dx)
 
         self.assertTrue(np.isscalar(Df_x))
-        assert math.isclose(Df_x, -1,rel_tol = 0.01)
+        self.assertAlmostEqual(Df_x, -1)
 
     def test_ApproxJacobian1e(self):
         #test for exponential function
@@ -87,11 +87,11 @@ class TestFunctions(unittest.TestCase):
         def f(x):
             return math.e**x
         x0 = 1
-        dx = 1.e-003
+        dx = 1.e-005
         Df_x = F.approximateJacobian(f, x0, dx)
 
         self.assertTrue(np.isscalar(Df_x))
-        assert math.isclose(Df_x, math.e,rel_tol = 0.01)
+        self.assertAlmostEqual(Df_x, math.e)
 
 #nonscalar tests
 
@@ -132,6 +132,21 @@ class TestFunctions(unittest.TestCase):
         # array-specific assert statements found in numpy.testing
         npt.assert_array_almost_equal(Df_x, A)
 
+    def test_ApproxJacobian2a(self):
+        
+        poly1 = F.Polynomial([2,2,2])
+        poly2 = F.Polynomial([3,3,3])
+        def f(x):
+            print(x)
+            return np.matrix([[poly1(int(x[0]))],[poly2(int(x[1]))]])
+
+
+        x0 = np.matrix([[2.0],[3.0]])
+        dx = 1.e-6
+        Df_x = F.approximateJacobian(f, x0, dx)
+        print(Df_x)
+        self.assertEqual(len(Df_x), 2)
+        npt.assert_array_almost_equal(Df_x, A)
 
 
     def test_Polynomial(self):

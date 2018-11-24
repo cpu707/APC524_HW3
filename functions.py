@@ -38,7 +38,7 @@ def approximateJacobian(f, x, dx=1e-6):
     # First, handle the case in which x is a scalar (i.e. not
     # array-like, just a plain number)
         if np.isscalar(x):
-            return (f(x + dx) - fx) / dx
+            return (f(x + dx*.5) - f(x-dx*.5)) / dx
 
     # From this point on, x must be a numpy array or numpy matrix, so
     # Df_x will be returned as a numpy matrix. Let's initialize it as
@@ -96,9 +96,12 @@ def approximateJacobian(f, x, dx=1e-6):
     # most legible for n00bz
 
         return Df_x
-    except (ZeroDivisionError, TypeError):
-        print("Something you entered is not a valid input. Please try again.")
-        
+ #   except (ZeroDivisionError, TypeError) as err:
+ #       print("Something you entered is not a valid input. Please try again.\n {0}".format(err))
+    finally:
+        pass
+
+
 class Polynomial(object):
     """Callable polynomial object.
 

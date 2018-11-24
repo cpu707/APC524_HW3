@@ -13,7 +13,7 @@ class Newton(object):
 
     """
     
-    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6, max_radius=2):
+    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6, maxradius=2):
         """Parameters:
         
         f: the function whose roots we seek. Can be scalar- or
@@ -30,7 +30,7 @@ class Newton(object):
         self._tol = tol
         self._maxiter = maxiter
         self._dx = dx
-        self._max_radius = max_radius
+        self._maxradius = maxradius
 
     def solve(self, x0):
         """Determine a solution of f(x) = 0, using Newton's method, starting
@@ -42,23 +42,22 @@ class Newton(object):
         # NOTE: no need to check whether x0 is scalar or vector. All
         # the functions/methods invoked inside solve() return "the
         # right thing" when x0 is scalar.
-        try:
-            x = x0
-            for i in range(self._maxiter):
-                fx = self._f(x)
-                print(x)
-                # linalg.norm works fine on scalar inputs
-                if np.linalg.norm(fx) < self._tol:
-                    return x
-    
-                x = self.step(x, fx)
-                if x - x0 > self._max_radius:
-                    raise radiusException
-            if np.linalg.norm(fx) > self._tol:
-                print("This answer is not accurate, there were not enough interations")
-            return x
-        except radiusException:
-            print("The answer is out of bounds")
+        print('new test')
+        x = x0
+        for i in range(self._maxiter):
+            fx = self._f(x)
+            print(x)
+            # linalg.norm works fine on scalar inputs
+            if np.linalg.norm(fx) < self._tol:
+                return x
+
+            x = self.step(x, fx)
+            if abs(x - x0) > self._maxradius:
+                raise radiusException('The guess is to far from the answer. Try a different guess.')
+        if np.linalg.norm(fx) > self._tol:
+            print("This answer is not accurate, there were not enough interations")
+        return x
+
             
 
     def step(self, x, fx=None):

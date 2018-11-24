@@ -2,7 +2,7 @@
 
 import unittest
 import numpy as np
-
+import math
 import newton
 
 class TestNewton(unittest.TestCase):
@@ -37,6 +37,15 @@ class TestNewton(unittest.TestCase):
         x = solver.solve(2)
 
         self.assertAlmostEqual(x, math.sqrt(2))
+
+    def testQuadraticWithRadius(self):
+
+        f = lambda x : -3.0*x**2 + 6.0
+
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20)
+        x = solver.solve(50)
+
+        self.assertRaises(radiusException)
 
 
     def testQuadraticBadGuess(self):

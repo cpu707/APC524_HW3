@@ -44,6 +44,7 @@ class Newton(object):
         x = x0
         for i in range(self._maxiter):
             fx = self._f(x)
+            print(x)
             # linalg.norm works fine on scalar inputs
             if np.linalg.norm(fx) < self._tol:
                 return x
@@ -73,4 +74,4 @@ class Newton(object):
         if np.isscalar(x):
             h = np.asscalar(h)
 
-        return x + h
+        return x - h

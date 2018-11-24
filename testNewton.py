@@ -27,6 +27,16 @@ class TestNewton(unittest.TestCase):
         # Equality should be exact if we supply *the* root, ergo
         # assertEqual rather than assertAlmostEqual
         self.assertEqual(x, -2.0)
+        
+        
+    def testQuadratic(self):
+
+        f = lambda x : -3.0*x**2 + 6.0
+
+        solver = newton.Newton(f, tol=1.e-15, maxiter=20)
+        x = solver.solve(2)
+
+        self.assertAlmostEqual(x, math.sqrt(2))
 
 if __name__ == "__main__":
     unittest.main()

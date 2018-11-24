@@ -33,10 +33,30 @@ class TestNewton(unittest.TestCase):
 
         f = lambda x : -3.0*x**2 + 6.0
 
-        solver = newton.Newton(f, tol=1.e-15, maxiter=20)
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20)
         x = solver.solve(2)
 
         self.assertAlmostEqual(x, math.sqrt(2))
+
+
+    def testQuadraticBadGuess(self):
+
+        f = lambda x : -3.0*x**2 + 6.0
+
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20)
+        x = solver.solve(0)
+
+        self.assertEqual(x, math.sqrt(2))
+
+
+    def testQuadraticNoAnswer(self):
+
+        f = lambda x : 3.0*x**2 + 6.0
+
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20)
+        x = solver.solve(1)
+
+        self.assertEqual(x, None)
 
 if __name__ == "__main__":
     unittest.main()

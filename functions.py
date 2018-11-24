@@ -96,10 +96,10 @@ def approximateJacobian(f, x, dx=1e-6):
     # most legible for n00bz
 
         return Df_x
- #   except (ZeroDivisionError, TypeError) as err:
- #       print("Something you entered is not a valid input. Please try again.\n {0}".format(err))
-    finally:
-        pass
+    except (ZeroDivisionError, TypeError) as err:
+        print("Something you entered is not a valid input. Please try again.\n {0}".format(err))
+  #  finally:
+  #      pass
 
 
 class Polynomial(object):

@@ -7,6 +7,7 @@ Implementation of a Newton-Raphson root-finder.
 import numpy as np
 import functions as F
 
+
 class Newton(object):
     """Newton objects have a solve() method for finding roots of f(x)
     using Newton's method. x and f can both be vector-valued.
@@ -53,9 +54,11 @@ class Newton(object):
 
             x = self.step(x, fx)
 #            print('This is x after the step \n {0}'.format(x))
-            if type(x) == customException:
+#            if type(x) == customException:
+#                return x
+            if type(x) == singularException:
                 return x
-            if abs(x - x0) > self._maxradius:
+            if np.linalg.norm(x - x0) > self._maxradius:
                 return radiusException('The guess is to far from the answer. Try a different guess.')
  #       print('this is np.linalg.norm \n {0}'.format(np.linalg.norm(fx)))
         if np.linalg.norm(fx) > self._tol:
@@ -70,6 +73,8 @@ class Newton(object):
         argument fx is provided, assumes fx = f(x).
 
         """
+
+        
         if fx is None:
             fx = self._f(x)
 
@@ -79,13 +84,19 @@ class Newton(object):
         # it gives (A^{-1}) B. np.matrix() promotes scalars to 1x1
         # matrices.
 
-        if np.isscalar(x):
-            if Df_x ==0:
-                return customException("The starting guess is not good. Try again with a different guess")
-        else:
-            if np.linalg.cond(Df_x) > 1/sys.float_info.epsilon:
-                return customException("The starting guess is not good. Try again with a different guess")
-        h = np.linalg.solve(np.matrix(Df_x), np.matrix(fx))
+ #       if np.isscalar(x):
+ #           if Df_x ==0:
+ #               return customException("The starting guess is not good. Try again with a different guess")
+ #       else:
+ #           if np.linalg.cond(Df_x) > 1/sys.float_info.epsilon:
+ #               return customException("The starting guess is not good. Try again with a different guess")
+        
+        try:
+            
+            h = np.linalg.solve(np.matrix(Df_x), np.matrix(fx))
+            
+        except np.linalg.LinAlgError as err:
+            return singularException("The starting guess is not good. Try again with a different guess")   
         # Suppose x was a scalar. At this point, h is a 1x1 matrix. If
         # we want to return a scalar value for our next guess, we need
         # to re-scalarize h before combining it with our previous
@@ -94,10 +105,14 @@ class Newton(object):
         # that element as a scalar.
         if np.isscalar(x):
             h = np.asscalar(h)
-
+    
         return x - h
+
+     
 class customException(Exception):
     pass
 
 class radiusException(customException):
+    pass
+class singularException(customException):
     pass

@@ -7,7 +7,7 @@ import math
 
 import functions as F
 
-class TestFunctions(unittest.TestCase):
+class Test1DFunctions(unittest.TestCase):
    
  #scalar tests
     
@@ -108,6 +108,8 @@ class TestFunctions(unittest.TestCase):
 
 #nonscalar tests
 
+class Test2DFunctions(unittest.TestCase):
+
     def test_ApproxJacobian2(self):
         # numpy matrices can also be initialized with strings. The
         # semicolon separates rows; spaces (or commas) delimit entries
@@ -173,6 +175,8 @@ class TestFunctions(unittest.TestCase):
 
         self.assertEqual(len(Df_x), 2)
         npt.assert_array_almost_equal(Df_x, A)
+
+class miscTests(unittest.TestCase):
 
     def test_Polynomial(self):
         # p(x) = x^2 + 5x + 4

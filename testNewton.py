@@ -4,8 +4,9 @@ import unittest
 import numpy as np
 import math
 import newton
+import sys
 
-class TestNewton(unittest.TestCase):
+class Test1DNewton(unittest.TestCase):
     def testLinear(self):
         # Just so you see it at least once, this is the lambda keyword
         # in Python, which allows you to create anonymous functions
@@ -66,6 +67,30 @@ class TestNewton(unittest.TestCase):
         (x,s) = solver.solve(1)
 
         self.assertEqual(s, "This answer is not accurate, there were not enough interations")
+
+class Test2DNewton(unittest.TestCase):
+
+    def testLinear2(self):
+        initialGuess = np.matrix([[2.5],[1.5]])
+        def f(x):
+            return np.matrix([[3.0*(float(x[0])) + 6.0],[2.0*(float(x[1])) + 2]])
+ #       print("This is f \n {0}".format(f))
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20)
+        x = solver.solve(initialGuess)
+
+        self.assertEqual(x[0], -2)
+        self.assertEqual(x[1], -1)
+
+    def testQuad(self):
+        initialGuess = np.matrix([[2.5],[1.5]])
+        def f(x):
+            return np.matrix([[3.0*(float(x[0])) + 6.0],[2.0*(float(x[1])) + 2]])
+ #       print("This is f \n {0}".format(f))
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20)
+        x = solver.solve(initialGuess)
+
+        self.assertEqual(x[0], -2)
+        self.assertEqual(x[1], -1)
 
 if __name__ == "__main__":
     unittest.main()

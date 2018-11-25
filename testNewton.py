@@ -66,7 +66,7 @@ class Test1DNewton(unittest.TestCase):
         solver = newton.Newton(f, tol=2.e-15, maxiter=20)
         (x,s) = solver.solve(1)
 
-        self.assertEqual(s, "This answer is not accurate, there were not enough interations")
+        self.assertEqual(s,"This answer is not accurate, there were not enough iterations")
 
 class Test2DNewton(unittest.TestCase):
 
@@ -80,17 +80,28 @@ class Test2DNewton(unittest.TestCase):
 
         self.assertEqual(x[0], -2)
         self.assertEqual(x[1], -1)
-
-    def testQuad(self):
+        
+    def testLinear2(self):
         initialGuess = np.matrix([[2.5],[1.5]])
         def f(x):
-            return np.matrix([[3.0*(float(x[0])) + 6.0],[2.0*(float(x[1])) + 2]])
+            return np.matrix([[3.0*(float(x[0])) + 6.0],[2.0*(float(x[0])) + 2]])
+ #       print("This is f \n {0}".format(f))
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20)
+        x = solver.solve(initialGuess)
+
+        self.assertRaises(singularException)
+
+
+    def test2D(self):
+        initialGuess = np.matrix([[2.5],[1.5]])
+        def f(x):
+            return np.matrix([[3.0*(float(x[0])) +float(x[1])+ 6.0],[2.0*(float(x[1])) + float(x[0])+ 2]])
  #       print("This is f \n {0}".format(f))
         solver = newton.Newton(f, tol=2.e-15, maxiter=20)
         x = solver.solve(initialGuess)
 
         self.assertEqual(x[0], -2)
-        self.assertEqual(x[1], -1)
+        self.assertEqual(np.around(x[1], 10), 0)
 
 if __name__ == "__main__":
     unittest.main()

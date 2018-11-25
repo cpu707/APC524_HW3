@@ -7,6 +7,13 @@ Implementation of a Newton-Raphson root-finder.
 import numpy as np
 import functions as F
 
+class customException(Exception):
+    pass
+
+class radiusException(customException):
+    pass
+class singularException(customException):
+    pass
 
 class Newton(object):
     """Newton objects have a solve() method for finding roots of f(x)
@@ -62,7 +69,7 @@ class Newton(object):
                 return radiusException('The guess is to far from the answer. Try a different guess.')
  #       print('this is np.linalg.norm \n {0}'.format(np.linalg.norm(fx)))
         if np.linalg.norm(fx) > self._tol:
-            s = "This answer is not accurate, there were not enough interations"
+            s = "This answer is not accurate, there were not enough iterations"
             return(x, s)
         return x
 
@@ -96,7 +103,7 @@ class Newton(object):
             h = np.linalg.solve(np.matrix(Df_x), np.matrix(fx))
             
         except np.linalg.LinAlgError as err:
-            return singularException("The starting guess is not good. Try again with a different guess")   
+            return singularException("The starting guess is not good or there is no solution. Try again with a different guess")   
         # Suppose x was a scalar. At this point, h is a 1x1 matrix. If
         # we want to return a scalar value for our next guess, we need
         # to re-scalarize h before combining it with our previous
@@ -109,10 +116,3 @@ class Newton(object):
         return x - h
 
      
-class customException(Exception):
-    pass
-
-class radiusException(customException):
-    pass
-class singularException(customException):
-    pass

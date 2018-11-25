@@ -39,14 +39,6 @@ class Test1DNewton(unittest.TestCase):
 
         self.assertAlmostEqual(x, math.sqrt(2))
 
-    def testQuadraticWithRadius(self):
-
-        f = lambda x : -3.0*x**2 + 6.0
-
-        solver = newton.Newton(f, tol=2.e-15, maxiter=20, maxradius = 5)
-        x = solver.solve(50)
-
-        self.assertRaises(radiusException)
 
 
     def testQuadraticBadGuess(self):
@@ -103,8 +95,17 @@ class Test2DNewton(unittest.TestCase):
         self.assertEqual(x[0], -2)
         self.assertEqual(np.around(x[1], 10), 0)
 
-class TestDf1Dand2D(unittest.TestCase):
+class TestExtraFeatures(unittest.TestCase):
     
+    def testQuadraticWithRadius(self):
+
+        f = lambda x : -3.0*x**2 + 6.0
+
+        solver = newton.Newton(f, tol=2.e-15, maxiter=20, maxradius = 5)
+        x = solver.solve(50)
+
+        self.assertRaises(radiusException)
+
     def testDf(self):
         f = lambda x : -3.0*x**2 + 6.0
         g = lambda x: -6*x

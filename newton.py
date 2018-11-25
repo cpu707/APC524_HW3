@@ -21,7 +21,7 @@ class Newton(object):
 
     """
     
-    def __init__(self, f, tol=1.e-6, maxiter=20, dx=1.e-6, maxradius=200):
+    def __init__(self, f, Df=0, tol=1.e-6, maxiter=20, dx=1.e-6, maxradius=200):
         """Parameters:
         
         f: the function whose roots we seek. Can be scalar- or
@@ -34,12 +34,13 @@ class Newton(object):
         dx: step size for computing approximate Jacobian
 
         """
+        
         self._f = f
         self._tol = tol
         self._maxiter = maxiter
         self._dx = dx
         self._maxradius = maxradius
-
+        self._Df = Df
     def solve(self, x0):
         """Determine a solution of f(x) = 0, using Newton's method, starting
         from initial guess x0. x0 must be scalar or 1D-array-like. If
@@ -52,13 +53,15 @@ class Newton(object):
         # right thing" when x0 is scalar.
         print('new test')
         x = x0
+          
         for i in range(self._maxiter):
             fx = self._f(x)
+ 
             print(x)
             # linalg.norm works fine on scalar inputs
             if np.linalg.norm(fx) < self._tol:
                 return x
-
+                
             x = self.step(x, fx)
 #            print('This is x after the step \n {0}'.format(x))
 #            if type(x) == customException:
@@ -73,8 +76,6 @@ class Newton(object):
             return(x, s)
         return x
 
-            
-
     def step(self, x, fx=None):
         """Take a single step of a Newton method, starting from x. If the
         argument fx is provided, assumes fx = f(x).
@@ -84,8 +85,12 @@ class Newton(object):
         
         if fx is None:
             fx = self._f(x)
-
-        Df_x = F.approximateJacobian(self._f, x, self._dx)
+            
+        if self._Df == 0:
+            Df_x = F.approximateJacobian(self._f, x, self._dx)
+        
+        else:
+            Df_x = self._Df(x)
 
         # linalg.solve(A,B) returns the matrix solution to AX = B, so
         # it gives (A^{-1}) B. np.matrix() promotes scalars to 1x1

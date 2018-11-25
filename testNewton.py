@@ -103,6 +103,30 @@ class Test2DNewton(unittest.TestCase):
         self.assertEqual(x[0], -2)
         self.assertEqual(np.around(x[1], 10), 0)
 
+class TestDf1Dand2D(unittest.TestCase):
+    
+    def testDf(self):
+        f = lambda x : -3.0*x**2 + 6.0
+        g = lambda x: -6*x
+        solver = newton.Newton(f, Df =g, tol=2.e-15, maxiter=20)
+        x = solver.solve(2)
+
+        self.assertEqual(x, math.sqrt(2))
+        
+    def test2DDf(self):
+        initialGuess = np.matrix([[2.5],[1.5]])
+        def f(x):
+            return np.matrix([[3.0*(float(x[0])) +float(x[1])+ 6.0],[2.0*(float(x[1])) + float(x[0])+ 2]])
+        def g(x):
+            return np.matrix([[3.0,1.0],[1.0,2.0]])
+
+ #       print("This is f \n {0}".format(f))
+        solver = newton.Newton(f, Df = g, tol=2.e-15, maxiter=20)
+        x = solver.solve(initialGuess)
+
+        self.assertEqual(x[0], -2)
+        self.assertEqual(np.around(x[1], 10), 0)
+
 if __name__ == "__main__":
     unittest.main()
 
